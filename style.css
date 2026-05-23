@@ -1,1 +1,253 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial;
+}
 
+body{
+
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    overflow:hidden;
+
+    background:
+    linear-gradient(
+        135deg,
+        #2b0036,
+        #44105a,
+        #31104d
+    );
+}
+
+
+
+.container{
+
+    width:80%;
+    height:75vh;
+
+    background:#3b0048;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:60px;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 0 20px rgba(0,0,0,.4);
+}
+
+
+
+/* LEFT */
+
+.left{
+
+    width:45%;
+    color:white;
+
+}
+
+.left h1{
+
+    font-size:70px;
+    margin-bottom:20px;
+
+}
+
+.line{
+
+    width:60px;
+    height:3px;
+
+    background:white;
+
+    margin-bottom:25px;
+
+}
+
+.left p{
+
+    color:#ccc;
+    line-height:28px;
+    font-size:18px;
+
+}
+
+.left button{
+
+    margin-top:30px;
+
+    border:none;
+
+    padding:12px 25px;
+
+    border-radius:20px;
+
+    background:
+    linear-gradient(
+    to right,
+    orange,
+    hotpink);
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.left button:hover{
+
+    transform:scale(1.05);
+
+}
+
+
+
+/* RIGHT */
+
+.right{
+
+    width:320px;
+
+    background:
+    rgba(255,255,255,.1);
+
+    backdrop-filter:blur(10px);
+
+    padding:40px;
+
+    border-radius:15px;
+
+    color:white;
+
+}
+
+
+
+.right h2{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+    font-size:40px;
+
+}
+
+
+
+label{
+
+    display:block;
+
+    margin:15px 0 8px;
+
+}
+
+
+
+input{
+
+    width:100%;
+
+    padding:12px;
+
+    border:none;
+    outline:none;
+
+    border-radius:20px;
+
+    background:
+    rgba(255,255,255,.2);
+
+    color:white;
+
+}
+
+
+
+input::placeholder{
+
+    color:#ddd;
+
+}
+
+
+
+input:focus{
+
+    box-shadow:
+    0 0 10px hotpink;
+
+}
+
+
+
+/* BUTTON */
+
+.submit{
+
+    width:100%;
+
+    margin-top:30px;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:20px;
+
+    background:
+    linear-gradient(
+    to right,
+    orange,
+    hotpink);
+
+    color:white;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+
+.submit:hover{
+
+    transform:scale(1.05);
+
+}
+
+
+
+/* ICONS */
+
+.icons{
+
+    text-align:center;
+
+    margin-top:20px;
+
+}
+
+
+
+.icons span{
+
+    margin:10px;
+
+    font-size:25px;
+
+}
