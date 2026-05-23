@@ -4,126 +4,79 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Assembly Auth System — COAL Project</title>
-  <meta name="description" content="x86 Assembly-based Password Authentication System — University COAL Project" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Scanlines overlay -->
-  <div class="scanlines"></div>
-
-  <!-- Floating particles -->
-  <div class="particles" id="particles"></div>
-
-  <!-- Toast notification -->
-  <div id="toast"></div>
-
-  <!-- ── NAVBAR ─────────────────────────────────────────── -->
   <nav class="navbar">
-    <div class="nav-logo">
-      <div class="logo-icon">⬡</div>
-      <span>ASM<span style="color:var(--purple)">AUTH</span></span>
-    </div>
-    <div class="nav-badge">COAL Project · v1.0.0</div>
+    <h1>🔐 Assembly Auth System</h1>
+    <span>COAL Project — SCIT</span>
   </nav>
 
-  <!-- ── HERO ───────────────────────────────────────────── -->
   <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-
-        <div class="status-badge">
-          <span class="status-dot"></span>
-          System Online — Auth Module Loaded
-        </div>
-
-        <span class="hero-tag">Computer Oriented Assembly Language</span>
-
-        <h1 class="hero-title">
-          <span class="line-1">Assembly Based</span>
-          <span class="line-2">Password Authentication</span>
-        </h1>
-
-        <p class="hero-subtitle">&gt; x86 Architecture · Flask Backend · Text-File Storage</p>
-
-        <p class="hero-desc">
-          A fully functional authentication system built as a university COAL project.
-          Features x86 Assembly-powered verification, Python Flask backend, and
-          a secure glassmorphism frontend interface.
-        </p>
-
-        <!-- Tech stack pills -->
-        <div class="tech-pills">
-          <span class="pill html">HTML5</span>
-          <span class="pill css">CSS3</span>
-          <span class="pill js">JavaScript</span>
-          <span class="pill py">Python</span>
-          <span class="pill flask">Flask</span>
-          <span class="pill asm">x86 ASM</span>
-        </div>
-
-        <!-- CTA Buttons -->
-        <div class="hero-cta">
-          <a href="login.html" class="btn btn-primary">
-            <span>⚡</span>
-            <span class="btn-text">Login to System</span>
-          </a>
-          <a href="signup.html" class="btn btn-secondary">
-            <span>＋</span>
-            <span class="btn-text">Create Account</span>
-          </a>
-        </div>
-
-        <!-- Terminal -->
-        <div class="terminal-line" id="indexTerminal"></div>
-
-        <!-- Feature cards -->
-        <div class="features-grid" style="margin-top: 48px;">
-          <div class="feature-card">
-            <span class="feature-icon">🔐</span>
-            <div class="feature-title">Auth Engine</div>
-            <p class="feature-desc">x86 Assembly-powered password verification with custom hash routines and register-level operations.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🐍</span>
-            <div class="feature-title">Flask Backend</div>
-            <p class="feature-desc">Python Flask REST API bridges the web frontend with the Assembly binary for secure credential processing.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">💾</span>
-            <div class="feature-title">User Storage</div>
-            <p class="feature-desc">Lightweight users.txt file storage with hashed credentials — no database required for this COAL project.</p>
-          </div>
-          <div class="feature-card">
-            <span class="feature-icon">🛡️</span>
-            <div class="feature-title">Secure UI</div>
-            <p class="feature-desc">Client-side validation, field sanitization, brute-force delay simulation, and encrypted session handling.</p>
-          </div>
-        </div>
-
-      </div>
+    <h2>Assembly-Level<br><span>Password Authentication System</span></h2>
+    <p class="hero-sub">Computer Organization and Assembly Language</p>
+    <p class="hero-desc">
+      A console-based authentication system built in x86 Assembly language.
+      Validates username and password using string comparison, system calls,
+      and supports 3 login attempts before lockout.
+    </p>
+    <div class="hero-buttons">
+      <a href="login.html" class="btn btn-cyan">🔓 Login</a>
+      <a href="signup.html" class="btn btn-outline">📝 Sign Up</a>
     </div>
   </section>
 
-  <!-- ── FOOTER ─────────────────────────────────────────── -->
+  <!-- Project Info -->
+  <section class="info-section">
+    <div class="info-grid">
+
+      <div class="info-card">
+        <h3>👥 Team Members</h3>
+        <ul>
+          <li>Asjad Ali Siddiqi</li>
+          <li>Mujtaba Ali</li>
+          <li>Kashif Hussain</li>
+          <li>Sameer Aziz</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>📋 Project Details</h3>
+        <ul>
+          <li><b>Subject:</b> COAL</li>
+          <li><b>Instructor:</b> Sir Uzair Bashir</li>
+          <li><b>Department:</b> SCIT</li>
+          <li><b>Date:</b> May 13, 2026</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>⚙️ Key Features</h3>
+        <ul>
+          <li>x86 Assembly language</li>
+          <li>Username & password validation</li>
+          <li>3 attempts then lockout</li>
+          <li>INT 21h system calls</li>
+        </ul>
+      </div>
+
+      <div class="info-card">
+        <h3>🎯 Objectives</h3>
+        <ul>
+          <li>System calls & registers</li>
+          <li>String comparison logic</li>
+          <li>Control flow & branching</li>
+          <li>Memory management</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
   <footer class="page-footer">
-    <p class="footer-text">
-      <span>Assembly Based Password Authentication System</span><br>
-      COAL (Computer Oriented Assembly Language) — University Project<br>
-      Frontend: HTML5 · CSS3 · JS &nbsp;|&nbsp; Backend: Python Flask · x86 ASM
-    </p>
+    Assembly-Level Password Authentication System &nbsp;|&nbsp; COAL — SCIT &nbsp;|&nbsp; Instructor: Sir Uzair Bashir
   </footer>
 
-  <!-- Corner info badge -->
-  <div class="corner-badge">
-    <div class="corner-badge-title">System Status</div>
-    <div class="corner-badge-items">
-      <div class="corner-item"><span class="dot cyan"></span>Frontend Active</div>
-      <div class="corner-item"><span class="dot purple"></span>Flask Standby</div>
-      <div class="corner-item"><span class="dot green"></span>ASM Module Ready</div>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
 </body>
 </html>
