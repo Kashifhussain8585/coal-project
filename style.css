@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 *{
     margin:0;
@@ -6,15 +6,22 @@
     box-sizing:border-box;
     font-family:'Poppins',sans-serif;
 }
+
+
+
+/* BODY */
+
 body{
 
-    height:100vh;
+    min-height:100vh;
 
     display:flex;
     justify-content:center;
     align-items:center;
 
-    overflow:hidden;
+    padding:20px;
+
+    overflow-x:hidden;
 
     background:
     linear-gradient(
@@ -23,6 +30,7 @@ body{
         #111827,
         #1e293b
     );
+
 }
 
 
@@ -31,10 +39,20 @@ body{
 
 .container{
 
-    width:85%;
+    width:100%;
     max-width:1200px;
 
-    height:80vh;
+    min-height:700px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    gap:60px;
+
+    padding:70px;
+
+    border-radius:30px;
 
     background:
     rgba(255,255,255,.05);
@@ -42,18 +60,10 @@ body{
     border:
     1px solid rgba(255,255,255,.1);
 
-    backdrop-filter:blur(15px);
-
-    border-radius:25px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    padding:70px;
+    backdrop-filter:blur(20px);
 
     box-shadow:
-    0 0 40px rgba(0,0,0,.5);
+    0 0 40px rgba(0,0,0,.4);
 
 }
 
@@ -63,17 +73,23 @@ body{
 
 .left{
 
-    width:50%;
+    flex:1;
+
     color:white;
 
 }
 
+
+
 .left h1{
 
-    font-size:90px;
+    font-size:clamp(55px,8vw,95px);
+
     font-weight:700;
 
-    letter-spacing:4px;
+    letter-spacing:5px;
+
+    margin-bottom:20px;
 
     background:
     linear-gradient(
@@ -85,18 +101,18 @@ body{
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
 
-    margin-bottom:20px;
-
 }
 
 
 
 .line{
 
-    width:80px;
+    width:90px;
     height:4px;
 
-    border-radius:10px;
+    border-radius:20px;
+
+    margin-bottom:30px;
 
     background:
     linear-gradient(
@@ -105,21 +121,19 @@ body{
         #8b5cf6
     );
 
-    margin-bottom:30px;
-
 }
 
 
 
 .left p{
 
+    max-width:500px;
+
     color:#cbd5e1;
 
     font-size:18px;
 
-    line-height:32px;
-
-    width:90%;
+    line-height:34px;
 
 }
 
@@ -129,17 +143,18 @@ body{
 
 .right{
 
-    width:360px;
+    width:100%;
+    max-width:380px;
+
+    padding:45px;
+
+    border-radius:25px;
 
     background:
     rgba(255,255,255,.06);
 
     border:
     1px solid rgba(255,255,255,.1);
-
-    padding:45px;
-
-    border-radius:20px;
 
     backdrop-filter:blur(20px);
 
@@ -152,15 +167,15 @@ body{
 
 .right h2{
 
-    color:white;
-
     text-align:center;
 
-    margin-bottom:35px;
+    color:white;
 
-    font-size:38px;
+    font-size:36px;
 
     font-weight:600;
+
+    margin-bottom:35px;
 
 }
 
@@ -172,7 +187,7 @@ label{
 
     display:block;
 
-    margin:14px 0 8px;
+    margin:15px 0 8px;
 
     color:#cbd5e1;
 
@@ -186,22 +201,22 @@ input{
 
     width:100%;
 
-    padding:14px;
+    padding:15px;
 
     border:none;
     outline:none;
 
-    border-radius:14px;
+    border-radius:15px;
 
     background:
     rgba(255,255,255,.08);
 
+    border:
+    1px solid transparent;
+
     color:white;
 
     font-size:15px;
-
-    border:
-    1px solid transparent;
 
     transition:.3s;
 
@@ -223,7 +238,7 @@ input:focus{
     1px solid #8b5cf6;
 
     box-shadow:
-    0 0 15px rgba(139,92,246,.5);
+    0 0 15px rgba(139,92,246,.4);
 
 }
 
@@ -235,13 +250,20 @@ input:focus{
 
     width:100%;
 
-    margin-top:28px;
+    padding:15px;
 
-    padding:14px;
+    margin-top:28px;
 
     border:none;
 
-    border-radius:14px;
+    border-radius:15px;
+
+    cursor:pointer;
+
+    color:white;
+
+    font-size:16px;
+    font-weight:500;
 
     background:
     linear-gradient(
@@ -249,13 +271,6 @@ input:focus{
         #06b6d4,
         #8b5cf6
     );
-
-    color:white;
-
-    font-size:16px;
-    font-weight:500;
-
-    cursor:pointer;
 
     transition:.3s;
 
@@ -274,6 +289,14 @@ input:focus{
 
 
 
+.signup-btn{
+
+    margin-top:18px;
+
+}
+
+
+
 /* LINKS */
 
 a{
@@ -282,42 +305,58 @@ a{
 
 
 
-.signup-btn{
-    margin-top:15px;
-}
-
-
-
 /* RESPONSIVE */
 
-@media(max-width:950px){
+@media(max-width:900px){
 
     .container{
 
         flex-direction:column;
 
-        height:auto;
-
-        padding:40px;
-
-        gap:40px;
-
-    }
-
-    .left{
-
-        width:100%;
         text-align:center;
+
+        padding:50px 30px;
+
+        gap:50px;
 
     }
 
     .left p{
-        width:100%;
+
+        max-width:100%;
+
+    }
+
+}
+
+
+
+@media(max-width:500px){
+
+    .container{
+
+        padding:35px 20px;
+
     }
 
     .right{
-        width:100%;
-        max-width:400px;
+
+        padding:35px 25px;
+
+    }
+
+    .right h2{
+
+        font-size:30px;
+
+    }
+
+    .left p{
+
+        font-size:16px;
+
+        line-height:30px;
+
     }
 
 }
