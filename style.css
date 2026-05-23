@@ -251,3 +251,10 @@ input:focus{
     font-size:25px;
 
 }
+a{
+    text-decoration:none;
+}
+
+.signup-btn{
+    margin-top:15px;
+}
