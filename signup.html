@@ -1,69 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up — Assembly Auth System</title>
+
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
+  <!-- Background -->
+  <div class="scanlines"></div>
+  <div class="particles" id="particles"></div>
+
+  <!-- Navbar -->
   <nav class="navbar">
-    <h1>🔐 Assembly Auth System</h1>
-    <span>COAL Project — SCIT</span>
+
+    <div class="nav-logo">
+      <div class="logo-icon">⬡</div>
+      <span>ASM<span style="color:var(--purple)">AUTH</span></span>
+    </div>
+
+    <div class="nav-badge">
+      Sign Up
+    </div>
+
   </nav>
 
-  <div class="auth-page">
-    <div class="auth-card">
+  <!-- Back -->
+  <div class="back-nav">
+    <a href="index.html" class="btn btn-ghost">← Home</a>
+  </div>
 
-      <div class="card-header">
-        <h2>Create Account</h2>
-        <p class="subtitle">Computer Organization and Assembly Language</p>
-        <p class="subtitle">Sir Uzair Bashir &nbsp;|&nbsp; SCIT</p>
-      </div>
+  <!-- Signup -->
+  <main class="auth-page">
 
-      <div class="alert alert-error" id="alertBox"></div>
-      <div class="alert alert-success" id="successBox"></div>
+    <div class="auth-wrapper">
 
-      <form id="signupForm" novalidate>
+      <div class="auth-card">
 
-        <div class="form-group">
-          <label for="username">Username</label>
-          <input type="text" id="username" placeholder="Choose a username (min 3 chars)" autocomplete="off" />
-          <div class="field-error" id="usernameErr">Username must be at least 3 characters (letters & numbers only).</div>
+        <!-- Header -->
+        <div class="auth-header">
+
+          <div class="auth-icon">⚙️</div>
+
+          <h1 class="auth-title">
+            Create Account
+          </h1>
+
+          <p class="auth-subtitle">
+            Register new user
+          </p>
+
         </div>
 
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Create a password (min 6 chars)" />
-          <div class="field-error" id="passwordErr">Password must be at least 6 characters.</div>
+        <!-- Alert -->
+        <div id="signupAlert" class="alert-box"></div>
+
+        <!-- Form -->
+        <form id="signupForm" autocomplete="off">
+
+          <!-- Username -->
+          <div class="form-group">
+
+            <label class="form-label">Username</label>
+
+            <input
+              type="text"
+              id="signupUsername"
+              class="form-input"
+              placeholder="Enter username"
+            />
+
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+
+            <label class="form-label">Password</label>
+
+            <input
+              type="password"
+              id="signupPassword"
+              class="form-input"
+              placeholder="Create password"
+            />
+
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-group">
+
+            <label class="form-label">Confirm Password</label>
+
+            <input
+              type="password"
+              id="signupConfirm"
+              class="form-input"
+              placeholder="Confirm password"
+            />
+
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn btn-submit">
+            Create Account
+          </button>
+
+        </form>
+
+        <!-- Login Link -->
+        <div class="form-footer-center">
+          <a href="login.html" class="form-link">
+            Already have an account? Login →
+          </a>
         </div>
 
-        <div class="form-group">
-          <label for="confirm">Confirm Password</label>
-          <input type="password" id="confirm" placeholder="Re-enter your password" />
-          <div class="field-error" id="confirmErr">Passwords do not match.</div>
-        </div>
-
-        <button type="submit" class="btn btn-full" style="margin-top: 10px;" id="signupBtn">
-          Create Account
-        </button>
-
-      </form>
-
-      <div class="form-footer">
-        Already have an account? <a href="login.html">Login</a>
-        &nbsp;|&nbsp;
-        <a href="index.html">← Home</a>
       </div>
 
     </div>
-  </div>
 
-  <footer class="page-footer">
-    Assembly Auth System &nbsp;|&nbsp; COAL &nbsp;|&nbsp; SCIT
-  </footer>
+  </main>
 
-  <script src="script.js"></script>
 </body>
+
 </html>
