@@ -3,143 +3,127 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>Assembly Auth System</title>
-
+  <title>Assembly Auth System — COAL Project</title>
+  <meta name="description" content="x86 Assembly-based Password Authentication System — University COAL Project" />
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-  <!-- Background Effects -->
+  <!-- Scanlines overlay -->
   <div class="scanlines"></div>
+
+  <!-- Floating particles -->
   <div class="particles" id="particles"></div>
 
-  <!-- Navbar -->
-  <nav class="navbar">
+  <!-- Toast notification -->
+  <div id="toast"></div>
 
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
+  <nav class="navbar">
     <div class="nav-logo">
       <div class="logo-icon">⬡</div>
-
-      <span>
-        ASM<span style="color:var(--purple)">AUTH</span>
-      </span>
+      <span>ASM<span style="color:var(--purple)">AUTH</span></span>
     </div>
-
-    <div class="nav-badge">
-      COAL Project
-    </div>
-
+    <div class="nav-badge">COAL Project · v1.0.0</div>
   </nav>
 
-  <!-- Main Section -->
+  <!-- ── HERO ───────────────────────────────────────────── -->
   <section class="hero">
-
     <div class="container">
-
       <div class="hero-content">
 
-        <!-- Status -->
         <div class="status-badge">
           <span class="status-dot"></span>
-          System Online
+          System Online — Auth Module Loaded
         </div>
 
-        <!-- Heading -->
+        <span class="hero-tag">Computer Oriented Assembly Language</span>
+
         <h1 class="hero-title">
-          Assembly Based <br>
-          Password Authentication
+          <span class="line-1">Assembly Based</span>
+          <span class="line-2">Password Authentication</span>
         </h1>
 
-        <!-- Subtitle -->
-        <p class="hero-subtitle">
-          x86 Assembly · Flask Backend · Secure Login System
-        </p>
+        <p class="hero-subtitle">&gt; x86 Architecture · Flask Backend · Text-File Storage</p>
 
-        <!-- Description -->
         <p class="hero-desc">
-          A university COAL project built using HTML, CSS,
-          JavaScript, Python Flask, and x86 Assembly.
+          A fully functional authentication system built as a university COAL project.
+          Features x86 Assembly-powered verification, Python Flask backend, and
+          a secure glassmorphism frontend interface.
         </p>
 
-        <!-- Tech Stack -->
+        <!-- Tech stack pills -->
         <div class="tech-pills">
-
           <span class="pill html">HTML5</span>
-
           <span class="pill css">CSS3</span>
-
           <span class="pill js">JavaScript</span>
-
           <span class="pill py">Python</span>
-
           <span class="pill flask">Flask</span>
-
           <span class="pill asm">x86 ASM</span>
-
         </div>
 
-        <!-- Buttons -->
+        <!-- CTA Buttons -->
         <div class="hero-cta">
-
           <a href="login.html" class="btn btn-primary">
-            Login
+            <span>⚡</span>
+            <span class="btn-text">Login to System</span>
           </a>
-
           <a href="signup.html" class="btn btn-secondary">
-            Sign Up
+            <span>＋</span>
+            <span class="btn-text">Create Account</span>
           </a>
-
         </div>
 
         <!-- Terminal -->
         <div class="terminal-line" id="indexTerminal"></div>
 
+        <!-- Feature cards -->
+        <div class="features-grid" style="margin-top: 48px;">
+          <div class="feature-card">
+            <span class="feature-icon">🔐</span>
+            <div class="feature-title">Auth Engine</div>
+            <p class="feature-desc">x86 Assembly-powered password verification with custom hash routines and register-level operations.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🐍</span>
+            <div class="feature-title">Flask Backend</div>
+            <p class="feature-desc">Python Flask REST API bridges the web frontend with the Assembly binary for secure credential processing.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">💾</span>
+            <div class="feature-title">User Storage</div>
+            <p class="feature-desc">Lightweight users.txt file storage with hashed credentials — no database required for this COAL project.</p>
+          </div>
+          <div class="feature-card">
+            <span class="feature-icon">🛡️</span>
+            <div class="feature-title">Secure UI</div>
+            <p class="feature-desc">Client-side validation, field sanitization, brute-force delay simulation, and encrypted session handling.</p>
+          </div>
+        </div>
+
       </div>
-
     </div>
-
   </section>
 
-  <!-- Footer -->
+  <!-- ── FOOTER ─────────────────────────────────────────── -->
   <footer class="page-footer">
-
     <p class="footer-text">
-      Assembly Based Password Authentication System <br>
-      COAL Project
+      <span>Assembly Based Password Authentication System</span><br>
+      COAL (Computer Oriented Assembly Language) — University Project<br>
+      Frontend: HTML5 · CSS3 · JS &nbsp;|&nbsp; Backend: Python Flask · x86 ASM
     </p>
-
   </footer>
 
-  <!-- System Badge -->
+  <!-- Corner info badge -->
   <div class="corner-badge">
-
-    <div class="corner-badge-title">
-      System Status
-    </div>
-
+    <div class="corner-badge-title">System Status</div>
     <div class="corner-badge-items">
-
-      <div class="corner-item">
-        <span class="dot cyan"></span>
-        Frontend Active
-      </div>
-
-      <div class="corner-item">
-        <span class="dot purple"></span>
-        Flask Ready
-      </div>
-
-      <div class="corner-item">
-        <span class="dot green"></span>
-        ASM Ready
-      </div>
-
+      <div class="corner-item"><span class="dot cyan"></span>Frontend Active</div>
+      <div class="corner-item"><span class="dot purple"></span>Flask Standby</div>
+      <div class="corner-item"><span class="dot green"></span>ASM Module Ready</div>
     </div>
-
   </div>
 
   <script src="script.js"></script>
-
 </body>
 </html>
