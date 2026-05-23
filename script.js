@@ -1,415 +1,199 @@
+/*
+  Assembly Auth System — script.js
+  COAL Project | SCIT | Sir Uzair Bashir
+  Team: Asjad Ali Siddiqi, Mujtaba Ali, Kashif Hussain, Sameer Aziz
 
-/**
- * ============================================================
- * ASSEMBLY AUTH SYSTEM — script.js
- * Frontend Authentication Logic + UI Effects
- * ============================================================
- */
+  Authentication Logic:
+  - Validates empty fields
+  - Validates password matching (signup)
+  - 3 login attempts then lockout (mirrors ASM behaviour)
+  - localStorage used to simulate users.txt storage
+*/
 
-'use strict';
+const USERS_KEY    = 'coal_auth_users';
+const MAX_ATTEMPTS = 3;
 
-/* ── Constants ─────────────────────────────────────────────── */
-const STORAGE_KEY  = 'asm_auth_users';
-const SESSION_KEY  = 'asm_auth_session';
-const TOAST_DURATION = 3500;
-
-/* ── User Store (localStorage simulation) ──────────────────── */
-const UserStore = {
-  getAll() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-    } catch { return {}; }
-  },
-
-  save(users) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
-  },
-
-  exists(username) {
-    return username.toLowerCase() in this.getAll();
-  },
-
-  add(username, password) {
-    const users = this.getAll();
-    users[username.toLowerCase()] = {
-      username,
-      passwordHash: simpleHash(password),
-      createdAt: new Date().toISOString(),
-    };
-    this.save(users);
-  },
-
-  verify(username, password) {
-    const users = this.getAll();
-    const user  = users[username.toLowerCase()];
-    if (!user) return false;
-    return user.passwordHash === simpleHash(password);
-  },
-
-  getUser(username) {
-    const users = this.getAll();
-    return users[username.toLowerCase()] || null;
-  }
-};
-
-/* ── Session ───────────────────────────────────────────────── */
-const Session = {
-  set(username) {
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify({
-      username, loginAt: new Date().toISOString()
-    }));
-  },
-  get() {
-    try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)); }
-    catch { return null; }
-  },
-  clear() { sessionStorage.removeItem(SESSION_KEY); }
-};
-
-/* ── Simple hash (demo only — use bcrypt server-side!) ─────── */
-function simpleHash(str) {
-  let hash = 0x811c9dc5;
+/* ── Simple hash (mirrors FNV-1a used in ASM module) ── */
+function hashPassword(str) {
+  let h = 0x811C9DC5;
   for (let i = 0; i < str.length; i++) {
-    hash ^= str.charCodeAt(i);
-    hash = (hash * 0x01000193) >>> 0;
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 0x01000193) >>> 0;
   }
-  return hash.toString(16).padStart(8, '0');
+  return h.toString(16).padStart(8, '0');
 }
 
-/* ════════════════════════════════════════════════════════════
-   TOAST NOTIFICATION
-════════════════════════════════════════════════════════════ */
-function showToast(message, type = 'info') {
-  const toast = document.getElementById('toast');
-  if (!toast) return;
-
-  const icons = { success: '✓', error: '✕', info: 'ℹ' };
-
-  toast.className = `toast-${type}`;
-  toast.innerHTML = `<span class="toast-icon">${icons[type]}</span><span>${message}</span>`;
-
-  toast.classList.add('show');
-  clearTimeout(toast._timer);
-  toast._timer = setTimeout(() => toast.classList.remove('show'), TOAST_DURATION);
+/* ── User storage helpers ── */
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem(USERS_KEY)) || {}; }
+  catch { return {}; }
 }
 
-/* ════════════════════════════════════════════════════════════
-   ALERT BOX (inside card)
-════════════════════════════════════════════════════════════ */
-function showAlert(id, message, type = 'info') {
-  const box = document.getElementById(id);
-  if (!box) return;
+function saveUser(username, password) {
+  const users = getUsers();
+  users[username.toLowerCase()] = hashPassword(password);
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
 
-  const icons = { success: '✓', error: '⚠', info: 'ℹ' };
+function userExists(username) {
+  return username.toLowerCase() in getUsers();
+}
 
-  box.className = `alert-box alert-${type} visible`;
-  box.innerHTML = `<span class="alert-icon">${icons[type]}</span><span class="alert-text">${message}</span>`;
+function verifyUser(username, password) {
+  const users = getUsers();
+  const stored = users[username.toLowerCase()];
+  return stored && stored === hashPassword(password);
+}
+
+/* ── Show / hide helpers ── */
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function hideError(id) {
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
+}
+
+function showAlert(boxId, msg) {
+  const el = document.getElementById(boxId);
+  if (!el) return;
+  el.textContent = msg;
+  el.style.display = 'block';
 }
 
 function hideAlert(id) {
-  const box = document.getElementById(id);
-  if (box) box.classList.remove('visible');
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'none';
 }
 
-/* ════════════════════════════════════════════════════════════
-   FIELD VALIDATION HELPERS
-════════════════════════════════════════════════════════════ */
-function setFieldState(inputEl, state, message = '') {
+function setInputState(inputEl, state) {
   inputEl.classList.remove('error', 'success');
-  const errEl = inputEl.closest('.form-group')?.querySelector('.field-error');
-
-  if (state === 'error') {
-    inputEl.classList.add('error');
-    if (errEl) { errEl.textContent = message; errEl.classList.add('visible'); }
-    return false;
-  }
-
-  if (state === 'success') {
-    inputEl.classList.add('success');
-    if (errEl) errEl.classList.remove('visible');
-  } else {
-    if (errEl) errEl.classList.remove('visible');
-  }
-  return true;
+  if (state) inputEl.classList.add(state);
 }
 
-function clearField(inputEl) {
-  inputEl.classList.remove('error', 'success');
-  const errEl = inputEl.closest('.form-group')?.querySelector('.field-error');
-  if (errEl) errEl.classList.remove('visible');
-}
+/* ════════════════════════
+   LOGIN PAGE
+════════════════════════ */
+function initLogin() {
+  const form        = document.getElementById('loginForm');
+  if (!form) return;
 
-/* ════════════════════════════════════════════════════════════
-   PASSWORD STRENGTH METER
-════════════════════════════════════════════════════════════ */
-function getStrength(password) {
-  let score = 0;
-  if (password.length >= 6)  score++;
-  if (password.length >= 10) score++;
-  if (/[A-Z]/.test(password)) score++;
-  if (/[0-9]/.test(password)) score++;
-  if (/[^A-Za-z0-9]/.test(password)) score++;
+  const usernameEl  = document.getElementById('username');
+  const passwordEl  = document.getElementById('password');
+  const loginBtn    = document.getElementById('loginBtn');
+  const attemptBar  = document.querySelector('.attempt-bar');
+  const lockoutBox  = document.getElementById('lockoutBox');
 
-  if (score <= 1) return { level: 'weak',   segments: 1, label: 'Weak' };
-  if (score <= 3) return { level: 'medium', segments: 3, label: 'Moderate' };
-  return           { level: 'strong', segments: 5, label: 'Strong' };
-}
+  let attempts = 0;
 
-function updateStrengthMeter(password, barId, labelId) {
-  const bar   = document.getElementById(barId);
-  const label = document.getElementById(labelId);
-  if (!bar || !label) return;
+  function updateAttemptBar() {
+    const counter = document.getElementById('attemptCount');
+    if (counter) counter.textContent = attempts + ' / ' + MAX_ATTEMPTS;
 
-  if (!password) {
-    bar.classList.remove('visible');
-    label.classList.remove('visible');
-    return;
-  }
-
-  const { level, segments, label: text } = getStrength(password);
-  const segs = bar.querySelectorAll('.strength-segment');
-
-  bar.classList.add('visible');
-  label.classList.add('visible');
-
-  segs.forEach((s, i) => {
-    s.className = 'strength-segment';
-    if (i < segments) s.classList.add(level);
-  });
-
-  label.className = `strength-label visible ${level}`;
-  label.textContent = `Password strength: ${text}`;
-}
-
-/* ════════════════════════════════════════════════════════════
-   PASSWORD TOGGLE
-════════════════════════════════════════════════════════════ */
-function togglePassword(inputId, btnEl) {
-  const input = document.getElementById(inputId);
-  if (!input) return;
-  const isHidden = input.type === 'password';
-  input.type = isHidden ? 'text' : 'password';
-  btnEl.textContent = isHidden ? '🙈' : '👁';
-}
-
-/* ════════════════════════════════════════════════════════════
-   BUTTON LOADING STATE
-════════════════════════════════════════════════════════════ */
-function setBtnLoading(btn, loading) {
-  if (loading) {
-    btn.classList.add('loading');
-    btn.disabled = true;
-  } else {
-    btn.classList.remove('loading');
-    btn.disabled = false;
-  }
-}
-
-/* ════════════════════════════════════════════════════════════
-   TERMINAL TYPEWRITER
-════════════════════════════════════════════════════════════ */
-function startTypewriter(elId, lines, speed = 50) {
-  const el = document.getElementById(elId);
-  if (!el) return;
-
-  let lineIdx = 0, charIdx = 0;
-  const cursor = '<span class="terminal-cursor"></span>';
-
-  function type() {
-    if (lineIdx >= lines.length) { lineIdx = 0; }
-    const line = lines[lineIdx];
-
-    if (charIdx < line.length) {
-      el.innerHTML = line.slice(0, charIdx + 1) + cursor;
-      charIdx++;
-      setTimeout(type, speed);
-    } else {
-      setTimeout(() => {
-        charIdx = 0;
-        lineIdx++;
-        el.innerHTML = cursor;
-        setTimeout(type, 300);
-      }, 2000);
+    if (attemptBar) {
+      attemptBar.classList.remove('warning', 'danger');
+      if (attempts === 2) attemptBar.classList.add('warning');
+      if (attempts >= 3) attemptBar.classList.add('danger');
     }
   }
 
-  type();
-}
-
-/* ════════════════════════════════════════════════════════════
-   PARTICLE SYSTEM
-════════════════════════════════════════════════════════════ */
-function initParticles() {
-  const container = document.getElementById('particles');
-  if (!container) return;
-
-  const colors = ['#00e5ff', '#a020f0', '#ff2d95', '#00ff88'];
-  const COUNT  = 25;
-
-  for (let i = 0; i < COUNT; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-
-    const x     = Math.random() * 100;
-    const delay = Math.random() * 15;
-    const dur   = 10 + Math.random() * 20;
-    const size  = 1 + Math.random() * 3;
-    const color = colors[Math.floor(Math.random() * colors.length)];
-
-    p.style.cssText = `
-      left: ${x}%;
-      bottom: -10px;
-      width: ${size}px;
-      height: ${size}px;
-      background: ${color};
-      box-shadow: 0 0 ${size * 3}px ${color};
-      animation-delay: ${delay}s;
-      animation-duration: ${dur}s;
-    `;
-
-    container.appendChild(p);
+  function lockout() {
+    form.style.display = 'none';
+    if (lockoutBox) lockoutBox.style.display = 'block';
+    hideAlert('alertBox');
+    hideAlert('successBox');
   }
-}
 
-/* ════════════════════════════════════════════════════════════
-   VALIDATION RULES
-════════════════════════════════════════════════════════════ */
-const Rules = {
-  username(val) {
-    if (!val.trim())         return 'Username is required.';
-    if (val.trim().length < 3)   return 'Username must be at least 3 characters.';
-    if (val.trim().length > 20)  return 'Username cannot exceed 20 characters.';
-    if (!/^[a-zA-Z0-9_]+$/.test(val.trim())) return 'Only letters, numbers and underscores allowed.';
-    return null;
-  },
-  password(val) {
-    if (!val)                return 'Password is required.';
-    if (val.length < 6)      return 'Password must be at least 6 characters.';
-    return null;
-  },
-  confirmPassword(val, original) {
-    if (!val)                return 'Please confirm your password.';
-    if (val !== original)    return 'Passwords do not match.';
-    return null;
-  }
-};
-
-/* ════════════════════════════════════════════════════════════
-   LOGIN PAGE
-════════════════════════════════════════════════════════════ */
-function initLoginPage() {
-  const form  = document.getElementById('loginForm');
-  if (!form) return;
-
-  const usernameEl = document.getElementById('loginUsername');
-  const passwordEl = document.getElementById('loginPassword');
-  const submitBtn  = document.getElementById('loginBtn');
-
-  /* Live validation */
-  usernameEl.addEventListener('blur', () => {
-    const err = Rules.username(usernameEl.value);
-    err ? setFieldState(usernameEl, 'error', err)
-        : setFieldState(usernameEl, 'success');
-  });
-
-  usernameEl.addEventListener('input', () => clearField(usernameEl));
-  passwordEl.addEventListener('input', () => clearField(passwordEl));
-
-  /* Submit */
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', function(e) {
     e.preventDefault();
-    hideAlert('loginAlert');
+
+    hideAlert('alertBox');
+    hideAlert('successBox');
+    hideError('usernameErr');
+    hideError('passwordErr');
 
     const username = usernameEl.value.trim();
     const password = passwordEl.value;
 
-    /* Client-side validation */
+    // Validate empty fields
     let valid = true;
-    const uErr = Rules.username(username);
-    const pErr = Rules.password(password);
 
-    if (uErr) { setFieldState(usernameEl, 'error', uErr); valid = false; }
-    else        setFieldState(usernameEl, 'success');
+    if (!username) {
+      showError('usernameErr', 'Please enter your username.');
+      setInputState(usernameEl, 'error');
+      valid = false;
+    } else {
+      setInputState(usernameEl, '');
+    }
 
-    if (pErr) { setFieldState(passwordEl, 'error', pErr); valid = false; }
-    else        setFieldState(passwordEl, 'success');
+    if (!password) {
+      showError('passwordErr', 'Please enter your password.');
+      setInputState(passwordEl, 'error');
+      valid = false;
+    } else {
+      setInputState(passwordEl, '');
+    }
 
     if (!valid) return;
 
-    setBtnLoading(submitBtn, true);
-
-    /* Simulate async auth (replace with fetch('/api/login', ...) later) */
-    await delay(900);
-
-    if (!UserStore.exists(username)) {
-      setBtnLoading(submitBtn, false);
-      setFieldState(usernameEl, 'error', 'Username not found.');
-      showAlert('loginAlert', 'No account found with that username. Please sign up first.', 'error');
+    // Check credentials
+    if (!userExists(username)) {
+      attempts++;
+      updateAttemptBar();
+      showAlert('alertBox', 'Username not found. Please sign up first.');
+      setInputState(usernameEl, 'error');
+      if (attempts >= MAX_ATTEMPTS) lockout();
       return;
     }
 
-    if (!UserStore.verify(username, password)) {
-      setBtnLoading(submitBtn, false);
-      setFieldState(passwordEl, 'error', 'Incorrect password.');
-      showAlert('loginAlert', 'Authentication failed. Please check your credentials.', 'error');
+    if (!verifyUser(username, password)) {
+      attempts++;
+      updateAttemptBar();
+      const remaining = MAX_ATTEMPTS - attempts;
+      if (remaining > 0) {
+        showAlert('alertBox', 'Incorrect password. ' + remaining + ' attempt(s) remaining.');
+      }
+      setInputState(passwordEl, 'error');
+      if (attempts >= MAX_ATTEMPTS) lockout();
       return;
     }
 
-    /* Success */
-    Session.set(username);
-    showAlert('loginAlert', `Access granted. Welcome back, ${username}!`, 'success');
-    showToast(`Authenticated as ${username}`, 'success');
+    // Success
+    setInputState(usernameEl, 'success');
+    setInputState(passwordEl, 'success');
+    showAlert('successBox', '✔ Authentication successful! Welcome, ' + username + '.');
+    loginBtn.disabled = true;
 
-    await delay(1400);
-    /* Redirect to a dashboard or back to index */
-    window.location.href = `index.html?user=${encodeURIComponent(username)}`;
+    setTimeout(function() {
+      window.location.href = 'index.html';
+    }, 1500);
   });
-
-  /* Typewriter */
-  startTypewriter('loginTerminal', [
-    '> INITIALIZING AUTH MODULE...',
-    '> CONNECTING TO ASSEMBLY BACKEND...',
-    '> AWAITING CREDENTIALS...',
-    '> x86 VERIFY ROUTINE LOADED',
-  ], 45);
 }
 
-/* ════════════════════════════════════════════════════════════
+/* ════════════════════════
    SIGNUP PAGE
-════════════════════════════════════════════════════════════ */
-function initSignupPage() {
+════════════════════════ */
+function initSignup() {
   const form = document.getElementById('signupForm');
   if (!form) return;
 
-  const usernameEl = document.getElementById('signupUsername');
-  const passwordEl = document.getElementById('signupPassword');
-  const confirmEl  = document.getElementById('signupConfirm');
-  const submitBtn  = document.getElementById('signupBtn');
+  const usernameEl = document.getElementById('username');
+  const passwordEl = document.getElementById('password');
+  const confirmEl  = document.getElementById('confirm');
+  const signupBtn  = document.getElementById('signupBtn');
 
-  /* Live validation & strength meter */
-  usernameEl.addEventListener('blur', () => {
-    const err = Rules.username(usernameEl.value);
-    err ? setFieldState(usernameEl, 'error', err)
-        : setFieldState(usernameEl, 'success');
-  });
-  usernameEl.addEventListener('input', () => clearField(usernameEl));
-
-  passwordEl.addEventListener('input', () => {
-    clearField(passwordEl);
-    updateStrengthMeter(passwordEl.value, 'strengthBar', 'strengthLabel');
-  });
-
-  confirmEl.addEventListener('input', () => {
-    clearField(confirmEl);
-    if (confirmEl.value && confirmEl.value === passwordEl.value) {
-      setFieldState(confirmEl, 'success');
-    }
-  });
-
-  /* Submit */
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', function(e) {
     e.preventDefault();
-    hideAlert('signupAlert');
+
+    hideAlert('alertBox');
+    hideAlert('successBox');
+    hideError('usernameErr');
+    hideError('passwordErr');
+    hideError('confirmErr');
 
     const username = usernameEl.value.trim();
     const password = passwordEl.value;
@@ -417,113 +201,67 @@ function initSignupPage() {
 
     let valid = true;
 
-    const uErr = Rules.username(username);
-    const pErr = Rules.password(password);
-    const cErr = Rules.confirmPassword(confirm, password);
+    // Validate username
+    if (!username || username.length < 3) {
+      showError('usernameErr', 'Username must be at least 3 characters.');
+      setInputState(usernameEl, 'error');
+      valid = false;
+    } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+      showError('usernameErr', 'Only letters, numbers and underscores allowed.');
+      setInputState(usernameEl, 'error');
+      valid = false;
+    } else {
+      setInputState(usernameEl, '');
+    }
 
-    if (uErr) { setFieldState(usernameEl, 'error', uErr); valid = false; }
-    else        setFieldState(usernameEl, 'success');
+    // Validate password
+    if (!password || password.length < 6) {
+      showError('passwordErr', 'Password must be at least 6 characters.');
+      setInputState(passwordEl, 'error');
+      valid = false;
+    } else {
+      setInputState(passwordEl, '');
+    }
 
-    if (pErr) { setFieldState(passwordEl, 'error', pErr); valid = false; }
-    else        setFieldState(passwordEl, 'success');
-
-    if (cErr) { setFieldState(confirmEl, 'error', cErr); valid = false; }
-    else        setFieldState(confirmEl, 'success');
+    // Validate confirm
+    if (!confirm) {
+      showError('confirmErr', 'Please confirm your password.');
+      setInputState(confirmEl, 'error');
+      valid = false;
+    } else if (confirm !== password) {
+      showError('confirmErr', 'Passwords do not match.');
+      setInputState(confirmEl, 'error');
+      valid = false;
+    } else {
+      setInputState(confirmEl, '');
+    }
 
     if (!valid) return;
 
-    setBtnLoading(submitBtn, true);
-    await delay(1000);
-
-    if (UserStore.exists(username)) {
-      setBtnLoading(submitBtn, false);
-      setFieldState(usernameEl, 'error', 'Username already taken.');
-      showAlert('signupAlert', `Username "${username}" is already registered. Please choose another.`, 'error');
+    // Check duplicate
+    if (userExists(username)) {
+      showAlert('alertBox', 'Username "' + username + '" is already taken. Please choose another.');
+      setInputState(usernameEl, 'error');
       return;
     }
 
-    /* Register user */
-    UserStore.add(username, password);
+    // Save user
+    saveUser(username, password);
 
-    showAlert('signupAlert', `Account created successfully for ${username}! Redirecting to login...`, 'success');
-    showToast('Account registered!', 'success');
+    setInputState(usernameEl, 'success');
+    setInputState(passwordEl, 'success');
+    setInputState(confirmEl, 'success');
+    showAlert('successBox', '✔ Account created successfully! Redirecting to login...');
+    signupBtn.disabled = true;
 
-    await delay(1600);
-    window.location.href = 'login.html';
+    setTimeout(function() {
+      window.location.href = 'login.html';
+    }, 1500);
   });
-
-  /* Typewriter */
-  startTypewriter('signupTerminal', [
-    '> LOADING SIGNUP MODULE...',
-    '> HASH ENGINE READY',
-    '> USERS.TXT FILE LINKED',
-    '> READY TO REGISTER USER',
-  ], 45);
 }
 
-/* ════════════════════════════════════════════════════════════
-   INDEX PAGE
-════════════════════════════════════════════════════════════ */
-function initIndexPage() {
-  /* Check if user just logged in */
-  const params = new URLSearchParams(window.location.search);
-  const user = params.get('user');
-  if (user) {
-    showToast(`Welcome back, ${decodeURIComponent(user)}! ✓`, 'success');
-    /* Clean the URL */
-    history.replaceState(null, '', 'index.html');
-  }
-
-  /* Animate feature cards on scroll */
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.style.opacity = '1';
-        entry.target.style.transform = 'translateY(0)';
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.feature-card').forEach(card => {
-    observer.observe(card);
-  });
-
-  /* Typewriter */
-  startTypewriter('indexTerminal', [
-    '> SYSTEM ONLINE',
-    '> COAL PROJECT v1.0 LOADED',
-    '> ASSEMBLY AUTH READY',
-    '> FLASK BACKEND STANDBY',
-  ], 45);
-}
-
-/* ════════════════════════════════════════════════════════════
-   SHARED INIT
-════════════════════════════════════════════════════════════ */
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  /* Create toast element if missing */
-  if (!document.getElementById('toast')) {
-    const t = document.createElement('div');
-    t.id = 'toast';
-    document.body.appendChild(t);
-  }
-
-  initParticles();
-
-  /* Detect page */
-  const path = window.location.pathname;
-  if (path.includes('login'))  initLoginPage();
-  if (path.includes('signup')) initSignupPage();
-  if (path.includes('index') || path.endsWith('/') || path.endsWith('.html') && !path.includes('login') && !path.includes('signup')) {
-    initIndexPage();
-  }
-
-  /* Stagger nav items */
-  document.querySelectorAll('[data-stagger]').forEach((el, i) => {
-    el.style.animationDelay = `${i * 0.1}s`;
-  });
+/* ── Init on page load ── */
+document.addEventListener('DOMContentLoaded', function() {
+  initLogin();
+  initSignup();
 });
