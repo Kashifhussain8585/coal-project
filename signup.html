@@ -1,129 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up — Assembly Auth System</title>
-
+  <meta name="description" content="Create a new account — Assembly Auth System COAL Project" />
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-  <!-- Background -->
+  <!-- Scanlines overlay -->
   <div class="scanlines"></div>
+
+  <!-- Floating particles -->
   <div class="particles" id="particles"></div>
 
-  <!-- Navbar -->
-  <nav class="navbar">
+  <!-- Toast notification -->
+  <div id="toast"></div>
 
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
+  <nav class="navbar">
     <div class="nav-logo">
       <div class="logo-icon">⬡</div>
       <span>ASM<span style="color:var(--purple)">AUTH</span></span>
     </div>
-
-    <div class="nav-badge">
-      Sign Up
-    </div>
-
+    <div class="nav-badge">New Account Registration</div>
   </nav>
 
-  <!-- Back -->
+  <!-- Back button -->
   <div class="back-nav">
     <a href="index.html" class="btn btn-ghost">← Home</a>
   </div>
 
-  <!-- Signup -->
+  <!-- ── SIGNUP PAGE ────────────────────────────────────── -->
   <main class="auth-page">
-
     <div class="auth-wrapper">
 
       <div class="auth-card">
 
-        <!-- Header -->
+        <!-- Card header -->
         <div class="auth-header">
-
           <div class="auth-icon">⚙️</div>
-
-          <h1 class="auth-title">
-            Create Account
-          </h1>
-
-          <p class="auth-subtitle">
-            Register new user
-          </p>
-
+          <h1 class="auth-title">Create Account</h1>
+          <p class="auth-subtitle">Register new credentials in system</p>
         </div>
 
-        <!-- Alert -->
-        <div id="signupAlert" class="alert-box"></div>
+        <!-- Alert box -->
+        <div class="alert-box" id="signupAlert" role="alert"></div>
 
-        <!-- Form -->
-        <form id="signupForm" autocomplete="off">
+        <!-- Signup Form -->
+        <form id="signupForm" novalidate autocomplete="off">
 
           <!-- Username -->
           <div class="form-group">
-
-            <label class="form-label">Username</label>
-
-            <input
-              type="text"
-              id="signupUsername"
-              class="form-input"
-              placeholder="Enter username"
-            />
-
+            <label class="form-label" for="signupUsername">
+              <span class="label-icon">◈</span>
+              Username
+            </label>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="signupUsername"
+                class="form-input"
+                placeholder="Choose a username (3–20 chars)"
+                maxlength="20"
+                autocomplete="username"
+                spellcheck="false"
+              />
+              <span class="input-icon">👤</span>
+            </div>
+            <span class="field-error" id="usernameError"></span>
           </div>
 
           <!-- Password -->
           <div class="form-group">
+            <label class="form-label" for="signupPassword">
+              <span class="label-icon">◈</span>
+              Password
+            </label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="signupPassword"
+                class="form-input"
+                placeholder="Create a strong password"
+                maxlength="64"
+                autocomplete="new-password"
+              />
+              <span class="input-icon">🔒</span>
+              <button
+                type="button"
+                class="pw-toggle"
+                onclick="togglePassword('signupPassword', this)"
+                aria-label="Toggle password visibility"
+              >👁</button>
+            </div>
+            <span class="field-error" id="passwordError"></span>
 
-            <label class="form-label">Password</label>
-
-            <input
-              type="password"
-              id="signupPassword"
-              class="form-input"
-              placeholder="Create password"
-            />
-
+            <!-- Strength meter -->
+            <div class="strength-bar" id="strengthBar">
+              <div class="strength-segment"></div>
+              <div class="strength-segment"></div>
+              <div class="strength-segment"></div>
+              <div class="strength-segment"></div>
+              <div class="strength-segment"></div>
+            </div>
+            <div class="strength-label" id="strengthLabel"></div>
           </div>
 
           <!-- Confirm Password -->
           <div class="form-group">
-
-            <label class="form-label">Confirm Password</label>
-
-            <input
-              type="password"
-              id="signupConfirm"
-              class="form-input"
-              placeholder="Confirm password"
-            />
-
+            <label class="form-label" for="signupConfirm">
+              <span class="label-icon">◈</span>
+              Confirm Password
+            </label>
+            <div class="input-wrapper">
+              <input
+                type="password"
+                id="signupConfirm"
+                class="form-input"
+                placeholder="Re-enter your password"
+                maxlength="64"
+                autocomplete="new-password"
+              />
+              <span class="input-icon">🔑</span>
+              <button
+                type="button"
+                class="pw-toggle"
+                onclick="togglePassword('signupConfirm', this)"
+                aria-label="Toggle confirm password visibility"
+              >👁</button>
+            </div>
+            <span class="field-error" id="confirmError"></span>
           </div>
 
-          <!-- Submit -->
-          <button type="submit" class="btn btn-submit">
-            Create Account
+          <hr class="form-divider" />
+
+          <!-- Submit button -->
+          <button type="submit" class="btn btn-submit" id="signupBtn">
+            <span class="btn-spinner"></span>
+            <span class="btn-text">＋ &nbsp; Create Account</span>
           </button>
 
         </form>
 
-        <!-- Login Link -->
+        <!-- Terminal line -->
+        <div class="terminal-line" id="signupTerminal" style="margin-top:16px;"></div>
+
+        <!-- Security bar -->
+        <div class="security-bar">
+          🛡️ &nbsp; Passwords hashed via Assembly-level cryptographic routine
+        </div>
+
+        <!-- Login redirect -->
         <div class="form-footer-center">
           <a href="login.html" class="form-link">
-            Already have an account? Login →
+            Already have an account? <span>Login →</span>
           </a>
         </div>
 
       </div>
 
     </div>
-
   </main>
 
-</body>
+  <!-- ── FOOTER ─────────────────────────────────────────── -->
+  <footer class="page-footer">
+    <p class="footer-text">
+      <span>Assembly Auth System</span> · COAL Project<br>
+      Passwords stored with x86 Assembly hash — users.txt file storage
+    </p>
+  </footer>
 
+  <script src="script.js"></script>
+</body>
 </html>
