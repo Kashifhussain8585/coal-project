@@ -4,158 +4,150 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login — Assembly Auth System</title>
-
+  <meta name="description" content="Secure login portal — Assembly Auth System COAL Project" />
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-  <!-- Background -->
+  <!-- Scanlines overlay -->
   <div class="scanlines"></div>
+
+  <!-- Floating particles -->
   <div class="particles" id="particles"></div>
+
+  <!-- Toast notification -->
   <div id="toast"></div>
 
-  <!-- Navbar -->
+  <!-- ── NAVBAR ─────────────────────────────────────────── -->
   <nav class="navbar">
-
     <div class="nav-logo">
       <div class="logo-icon">⬡</div>
       <span>ASM<span style="color:var(--purple)">AUTH</span></span>
     </div>
-
-    <div class="nav-badge">
-      Login
-    </div>
-
+    <div class="nav-badge">Secure Login Portal</div>
   </nav>
 
-  <!-- Back -->
+  <!-- Back button -->
   <div class="back-nav">
     <a href="index.html" class="btn btn-ghost">← Home</a>
   </div>
 
-  <!-- Login -->
+  <!-- ── LOGIN PAGE ─────────────────────────────────────── -->
   <main class="auth-page">
-
     <div class="auth-wrapper">
 
       <div class="auth-card">
 
-        <!-- Header -->
+        <!-- Card header -->
         <div class="auth-header">
           <div class="auth-icon">🔓</div>
-          <h1 class="auth-title">Login</h1>
-          <p class="auth-subtitle">Enter your credentials</p>
+          <h1 class="auth-title">System Access</h1>
+          <p class="auth-subtitle">Enter credentials to authenticate</p>
         </div>
 
-        <!-- Alert -->
-        <div id="loginAlert" class="alert-box"></div>
+        <!-- Alert box -->
+        <div class="alert-box" id="loginAlert" role="alert"></div>
 
-        <!-- Form -->
-        <form id="loginForm" autocomplete="off">
+        <!-- Login Form -->
+        <form id="loginForm" novalidate autocomplete="off">
 
           <!-- Username -->
           <div class="form-group">
-
-            <label for="loginUsername" class="form-label">
+            <label class="form-label" for="loginUsername">
+              <span class="label-icon">◈</span>
               Username
             </label>
-
-            <input
-              type="text"
-              id="loginUsername"
-              class="form-input"
-              placeholder="Username"
-              maxlength="20"
-            />
-
-            <span id="usernameError" class="field-error"></span>
-
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="loginUsername"
+                class="form-input"
+                placeholder="Enter your username"
+                maxlength="20"
+                autocomplete="username"
+                spellcheck="false"
+              />
+              <span class="input-icon">👤</span>
+            </div>
+            <span class="field-error" id="usernameError"></span>
           </div>
 
           <!-- Password -->
           <div class="form-group">
-
-            <label for="loginPassword" class="form-label">
+            <label class="form-label" for="loginPassword">
+              <span class="label-icon">◈</span>
               Password
             </label>
-
             <div class="input-wrapper">
-
               <input
                 type="password"
                 id="loginPassword"
                 class="form-input"
-                placeholder="Password"
+                placeholder="Enter your password"
                 maxlength="64"
+                autocomplete="current-password"
               />
-
+              <span class="input-icon">🔒</span>
               <button
                 type="button"
                 class="pw-toggle"
                 onclick="togglePassword('loginPassword', this)"
-              >
-                👁
-              </button>
-
+                aria-label="Toggle password visibility"
+              >👁</button>
             </div>
-
-            <span id="passwordError" class="field-error"></span>
-
+            <span class="field-error" id="passwordError"></span>
           </div>
 
-          <!-- Forgot -->
+          <!-- Forgot password -->
           <div class="form-footer">
-            <a href="#" onclick="handleForgot(event)" class="form-link">
-              Forgot password?
-            </a>
+            <span></span>
+            <a href="#" class="form-link" onclick="handleForgot(event)">Forgot password?</a>
           </div>
 
-          <!-- Submit -->
+          <hr class="form-divider" />
+
+          <!-- Submit button -->
           <button type="submit" class="btn btn-submit" id="loginBtn">
-            ⚡ Authenticate
+            <span class="btn-spinner"></span>
+            <span class="btn-text">⚡ &nbsp; Authenticate</span>
           </button>
 
         </form>
 
-        <!-- Terminal -->
-        <div class="terminal-line" id="loginTerminal"></div>
+        <!-- Terminal line -->
+        <div class="terminal-line" id="loginTerminal" style="margin-top:16px;"></div>
 
-        <!-- Security -->
+        <!-- Security bar -->
         <div class="security-bar">
-          Secure x86 Assembly Authentication
+          🔐 &nbsp; Secured via x86 Assembly Authentication Engine
         </div>
 
-        <!-- Signup -->
+        <!-- Signup redirect -->
         <div class="form-footer-center">
           <a href="signup.html" class="form-link">
-            Create account →
+            Don't have an account? <span>Create one →</span>
           </a>
         </div>
 
       </div>
 
     </div>
-
   </main>
 
-  <!-- Footer -->
+  <!-- ── FOOTER ─────────────────────────────────────────── -->
   <footer class="page-footer">
-
     <p class="footer-text">
-      COAL Project — Assembly Auth System
+      <span>Assembly Auth System</span> · COAL Project<br>
+      Credentials verified via x86 Assembly hash routine
     </p>
-
   </footer>
 
   <script src="script.js"></script>
-
   <script>
     function handleForgot(e) {
       e.preventDefault();
-      showToast('Backend required for password recovery', 'info');
+      showToast('Password recovery requires Flask backend integration.', 'info');
     }
   </script>
-
 </body>
 </html>
