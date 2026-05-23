@@ -4,150 +4,81 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login — Assembly Auth System</title>
-  <meta name="description" content="Secure login portal — Assembly Auth System COAL Project" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Scanlines overlay -->
-  <div class="scanlines"></div>
-
-  <!-- Floating particles -->
-  <div class="particles" id="particles"></div>
-
-  <!-- Toast notification -->
-  <div id="toast"></div>
-
-  <!-- ── NAVBAR ─────────────────────────────────────────── -->
   <nav class="navbar">
-    <div class="nav-logo">
-      <div class="logo-icon">⬡</div>
-      <span>ASM<span style="color:var(--purple)">AUTH</span></span>
-    </div>
-    <div class="nav-badge">Secure Login Portal</div>
+    <h1>🔐 Assembly Auth System</h1>
+    <span>COAL Project — SCIT</span>
   </nav>
 
-  <!-- Back button -->
-  <div class="back-nav">
-    <a href="index.html" class="btn btn-ghost">← Home</a>
-  </div>
+  <div class="auth-page">
+    <div class="auth-card">
 
-  <!-- ── LOGIN PAGE ─────────────────────────────────────── -->
-  <main class="auth-page">
-    <div class="auth-wrapper">
+      <div class="card-header">
+        <h2>User Login</h2>
+        <p class="subtitle">Computer Organization and Assembly Language</p>
+        <p class="subtitle">Sir Uzair Bashir &nbsp;|&nbsp; SCIT</p>
+      </div>
 
-      <div class="auth-card">
+      <!-- Attempt counter -->
+      <div class="attempt-bar">
+        <span>Login Attempts:</span>
+        <span id="attemptCount">0 / 3</span>
+      </div>
 
-        <!-- Card header -->
-        <div class="auth-header">
-          <div class="auth-icon">🔓</div>
-          <h1 class="auth-title">System Access</h1>
-          <p class="auth-subtitle">Enter credentials to authenticate</p>
+      <div class="alert alert-error" id="alertBox"></div>
+      <div class="alert alert-success" id="successBox"></div>
+
+      <form id="loginForm" novalidate>
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="Enter your username" autocomplete="off" />
+          <div class="field-error" id="usernameErr">Please enter your username.</div>
         </div>
 
-        <!-- Alert box -->
-        <div class="alert-box" id="loginAlert" role="alert"></div>
-
-        <!-- Login Form -->
-        <form id="loginForm" novalidate autocomplete="off">
-
-          <!-- Username -->
-          <div class="form-group">
-            <label class="form-label" for="loginUsername">
-              <span class="label-icon">◈</span>
-              Username
-            </label>
-            <div class="input-wrapper">
-              <input
-                type="text"
-                id="loginUsername"
-                class="form-input"
-                placeholder="Enter your username"
-                maxlength="20"
-                autocomplete="username"
-                spellcheck="false"
-              />
-              <span class="input-icon">👤</span>
-            </div>
-            <span class="field-error" id="usernameError"></span>
-          </div>
-
-          <!-- Password -->
-          <div class="form-group">
-            <label class="form-label" for="loginPassword">
-              <span class="label-icon">◈</span>
-              Password
-            </label>
-            <div class="input-wrapper">
-              <input
-                type="password"
-                id="loginPassword"
-                class="form-input"
-                placeholder="Enter your password"
-                maxlength="64"
-                autocomplete="current-password"
-              />
-              <span class="input-icon">🔒</span>
-              <button
-                type="button"
-                class="pw-toggle"
-                onclick="togglePassword('loginPassword', this)"
-                aria-label="Toggle password visibility"
-              >👁</button>
-            </div>
-            <span class="field-error" id="passwordError"></span>
-          </div>
-
-          <!-- Forgot password -->
-          <div class="form-footer">
-            <span></span>
-            <a href="#" class="form-link" onclick="handleForgot(event)">Forgot password?</a>
-          </div>
-
-          <hr class="form-divider" />
-
-          <!-- Submit button -->
-          <button type="submit" class="btn btn-submit" id="loginBtn">
-            <span class="btn-spinner"></span>
-            <span class="btn-text">⚡ &nbsp; Authenticate</span>
-          </button>
-
-        </form>
-
-        <!-- Terminal line -->
-        <div class="terminal-line" id="loginTerminal" style="margin-top:16px;"></div>
-
-        <!-- Security bar -->
-        <div class="security-bar">
-          🔐 &nbsp; Secured via x86 Assembly Authentication Engine
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" />
+          <div class="field-error" id="passwordErr">Please enter your password.</div>
         </div>
 
-        <!-- Signup redirect -->
-        <div class="form-footer-center">
-          <a href="signup.html" class="form-link">
-            Don't have an account? <span>Create one →</span>
-          </a>
+        <div class="forgot">
+          <a href="#">Forgot password?</a>
         </div>
 
+        <button type="submit" class="btn btn-full" id="loginBtn">Login</button>
+
+      </form>
+
+      <!-- Lockout screen (shown after 3 failed attempts) -->
+      <div class="lockout-box" id="lockoutBox">
+        <div class="lock-icon">🔒</div>
+        <h3>Account Locked</h3>
+        <p>
+          Maximum login attempts reached (3/3).<br>
+          This mirrors the lockout behaviour in our<br>
+          x86 Assembly authentication module.
+        </p>
+        <br>
+        <a href="index.html" class="btn btn-outline" style="font-size:0.85rem; padding:9px 22px;">← Go Home</a>
+      </div>
+
+      <div class="form-footer">
+        No account yet? <a href="signup.html">Sign Up</a>
+        &nbsp;|&nbsp;
+        <a href="index.html">← Home</a>
       </div>
 
     </div>
-  </main>
+  </div>
 
-  <!-- ── FOOTER ─────────────────────────────────────────── -->
   <footer class="page-footer">
-    <p class="footer-text">
-      <span>Assembly Auth System</span> · COAL Project<br>
-      Credentials verified via x86 Assembly hash routine
-    </p>
+    Assembly Auth System &nbsp;|&nbsp; COAL &nbsp;|&nbsp; SCIT
   </footer>
 
   <script src="script.js"></script>
-  <script>
-    function handleForgot(e) {
-      e.preventDefault();
-      showToast('Password recovery requires Flask backend integration.', 'info');
-    }
-  </script>
 </body>
 </html>
